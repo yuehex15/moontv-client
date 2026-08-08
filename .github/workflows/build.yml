@@ -3,8 +3,6 @@ name: 构建 MoonTV Windows 客户端
 on:
   push:
     branches: [main]
-    paths:
-      - 'moontv/**'
   workflow_dispatch:
 
 env:
