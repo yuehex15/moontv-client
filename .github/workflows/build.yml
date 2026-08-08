@@ -35,6 +35,7 @@ jobs:
           key: tauri-cli-${{ runner.os }}-2
 
       - name: 安装 Tauri CLI
+        shell: bash
         run: |
           if ! command -v cargo-tauri &> /dev/null; then
             cargo install tauri-cli --version "^2"
