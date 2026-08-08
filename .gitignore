@@ -1,0 +1,19 @@
+# Rust
+src-tauri/target/
+src-tauri/gen/
+
+# Node.js
+node_modules/
+
+# Output
+dist/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
