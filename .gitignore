@@ -5,8 +5,7 @@ src-tauri/gen/
 # Node.js
 node_modules/
 
-# Output
-dist/
+# Output (dist/index.html is the frontend shell, committed intentionally)
 
 # IDE
 .vscode/
