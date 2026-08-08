@@ -1,0 +1,49 @@
+name: 构建 MoonTV Windows 客户端
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'moontv/**'
+  workflow_dispatch:
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: 安装 Rust 工具链
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: x86_64-pc-windows-msvc
+
+      - name: 安装依赖 (WebView2 已内置)
+        run: |
+          rustc --version
+          cargo --version
+
+      - name: 安装 Tauri CLI
+        run: cargo install tauri-cli --version "^2"
+
+      - name: 构建 MoonTV 客户端
+        working-directory: moontv
+        run: cargo tauri build --bundles msi
+
+      - name: 上传构建产物
+        uses: actions/upload-artifact@v4
+        with:
+          name: MoonTV-Windows-x64
+          path: moontv/src-tauri/target/release/bundle/msi/*.msi
+          compression-level: 0
+
+      - name: 也上传 .exe
+        uses: actions/upload-artifact@v4
+        with:
+          name: MoonTV-Windows-x64-exe
+          path: moontv/src-tauri/target/release/*.exe
+          compression-level: 0
