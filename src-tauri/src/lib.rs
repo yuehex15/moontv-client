@@ -1,36 +1,6 @@
 // MoonTV 客户端 - 极轻量 Tauri 壳
 // 专为低内存设备优化（如小米平板2, 2GB RAM）
 
-use tauri::WebviewWindowExt;
-
-// 打开外部链接的系统默认浏览器
-#[tauri::command]
-fn open_external(url: String) {
-    #[cfg(target_os = "windows")]
-    {
-        let _ = std::process::Command::new("cmd")
-            .args(["/C", "start", "", &url])
-            .spawn();
-    }
-    #[cfg(not(target_os = "windows"))]
-    {
-        let _ = std::process::Command::new("xdg-open").arg(&url).spawn();
-    }
-}
-
-// 窗口导航控制
-#[tauri::command]
-fn navigate(window: tauri::Window, action: String) -> Result<(), String> {
-    match action.as_str() {
-        "back" => { let _ = window.eval("window.history.back()"); }
-        "forward" => { let _ = window.eval("window.history.forward()"); }
-        "reload" => { let _ = window.eval("window.location.reload()"); }
-        "home" => { let _ = window.eval("window.location.href = 'https://tv.zsam.de5.net/'"); }
-        _ => {}
-    }
-    Ok(())
-}
-
 // 切换全屏
 #[tauri::command]
 fn toggle_fullscreen(window: tauri::Window) -> Result<(), String> {
@@ -38,13 +8,19 @@ fn toggle_fullscreen(window: tauri::Window) -> Result<(), String> {
     window.set_fullscreen(!is_full).map_err(|e| e.to_string())
 }
 
+// 导航 - 使用原生 URL 导航
+#[tauri::command]
+fn navigate(window: tauri::Window, url: String) -> Result<(), String> {
+    window.navigate(url.parse().map_err(|e| e.to_string())?)
+        .map_err(|e| e.to_string())
+}
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
         .invoke_handler(tauri::generate_handler![
-            open_external,
-            navigate,
-            toggle_fullscreen
+            toggle_fullscreen,
+            navigate
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
