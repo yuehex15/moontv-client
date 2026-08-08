@@ -4,21 +4,53 @@
 
 ## ✨ 特性
 
-- 🪶 **极低内存占用**：仅 ~50-100MB RAM（对比 Electron 的 200-400MB）
-- 📦 **极小安装包**：MSI 安装包约 3-5MB
-- 🚀 **快速启动**：用系统 WebView2 渲染，启动即用
+- 🪶 **极低内存占用**：仅 ~50-100MB RAM
+- 📦 **极小安装包**：压缩包仅 ~8 MB
+- 🚀 **快速启动**：用系统 WebView2 渲染
 - 🎮 **平板优化**：默认 1280x720 窗口，支持全屏
-- 📺 **直接访问** MoonTV 影视平台
 
-## 🛠 技术栈
+## 📥 下载
 
-- **Tauri v2** - 轻量桌面应用框架
-- **Rust** - 后端
-- **WebView2** - Windows 系统内置渲染引擎（无需额外安装）
+从 [Releases](https://github.com/yuehex15/moontv-client/releases) 页面下载最新版的 `MoonTV-Windows-x64.zip`。
 
-## 📥 获取安装包
+## 📝 使用
 
-在工作流 (Actions) 页面运行 "构建 MoonTV Windows 客户端" 工作流，然后在运行结果中下载 `MoonTV-Windows-x64` 构件。
+1. 解压 zip 到任意目录（如 `D:\Apps\MoonTV\`）
+2. 运行 `MoonTV.exe`
+3. 输入账号密码登录观看
+
+## 🔧 修改域名（重要）
+
+MoonTV 是自建服务，**域名可能会变**。域名默认值在仓库源码中：
+
+```
+src-tauri/src/lib.rs → get_default_url()
+```
+
+修改返回的 URL 后推送，GitHub Actions 会自动重新构建，新版本即使用新域名。
+
+## ⚙️ 运行时配置
+
+同目录下 `settings.ini` 可自定义**代理和 WebView2 优化**（不涉及域名）：
+
+```ini
+# 代理模式：system / direct / custom
+proxy_mode = system
+
+# 自定义代理（仅 custom 模式）
+# custom_proxy = 127.0.0.1:10809
+
+# 禁用 GPU 加速（省内存，默认开启）
+disable_gpu = true
+
+# JS 堆内存上限（MB，默认 128）
+max_js_heap = 128
+```
+
+## ⌨️ 快捷键
+
+- `F11` - 切换全屏
+- `Ctrl+R` - 刷新
 
 ## 🖥 最低配置
 
@@ -27,21 +59,3 @@
 | 系统 | Windows 10/11 x64 |
 | 内存 | 最小 1GB，推荐 2GB |
 | WebView2 | 系统自带（Win10/11 已内置） |
-
-## 📝 使用
-
-1. 安装 MSI 包
-2. 启动 "MoonTV" 应用
-3. 输入账号密码登录
-4. 即可观看影视内容
-
-## ⌨️ 快捷键
-
-- `F11` - 切换全屏
-- `Alt+Left` - 后退
-- `Alt+Right` - 前进
-- `Ctrl+R` - 刷新
-
----
-
-*本应用为第三方客户端，与 MoonTV 官方无关。仅用于个人学习研究。*

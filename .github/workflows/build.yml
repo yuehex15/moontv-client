@@ -47,7 +47,17 @@ jobs:
           fi
 
       - name: 构建 MoonTV 客户端
-        run: cargo tauri build --bundles msi
+        run: cargo tauri build
+
+      - name: 打包 zip（exe + 配置文件 + 说明）
+        shell: bash
+        run: |
+          mkdir -p release/MoonTV
+          cp src-tauri/target/release/*.exe release/MoonTV/
+          cp settings.ini release/MoonTV/
+          # 使用 PowerShell 压缩为 zip
+          powershell -Command "Compress-Archive -Path 'release/MoonTV/*' -DestinationPath 'release/MoonTV-Windows-x64.zip' -Force"
+          ls -la release/
 
       - name: 创建 Release
         uses: ncipollo/release-action@v1
@@ -60,9 +70,14 @@ jobs:
             
             - 构建时间: ${{ github.event.head_commit.timestamp || github.event.repository.updated_at }}
             - 提交: ${{ github.sha }}
+            
+            使用方法：
+            1. 下载 MoonTV-Windows-x64.zip
+            2. 解压到任意目录
+            3. 运行 MoonTV.exe
+            4. 如需修改域名/代理，编辑 settings.ini 后重启
           artifacts: |
-            src-tauri/target/release/bundle/msi/*.msi
-            src-tauri/target/release/*.exe
-          artifactContentType: application/octet-stream
+            release/MoonTV-Windows-x64.zip
+          artifactContentType: application/zip
           draft: false
           prerelease: false
