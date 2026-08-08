@@ -1,10 +1,11 @@
 // MoonTV 客户端 - 极轻量 Tauri 壳
 // 专为低内存设备优化（如小米平板2, 2GB RAM）
 
+use tauri::WebviewWindowExt;
+
 // 打开外部链接的系统默认浏览器
 #[tauri::command]
 fn open_external(url: String) {
-    // 对于 Windows 目标，使用 cmd /c start
     #[cfg(target_os = "windows")]
     {
         let _ = std::process::Command::new("cmd")
@@ -13,9 +14,7 @@ fn open_external(url: String) {
     }
     #[cfg(not(target_os = "windows"))]
     {
-        let _ = std::process::Command::new("xdg-open")
-            .arg(&url)
-            .spawn();
+        let _ = std::process::Command::new("xdg-open").arg(&url).spawn();
     }
 }
 
@@ -23,18 +22,10 @@ fn open_external(url: String) {
 #[tauri::command]
 fn navigate(window: tauri::Window, action: String) -> Result<(), String> {
     match action.as_str() {
-        "back" => {
-            let _ = window.eval("window.history.back()");
-        }
-        "forward" => {
-            let _ = window.eval("window.history.forward()");
-        }
-        "reload" => {
-            let _ = window.eval("window.location.reload()");
-        }
-        "home" => {
-            let _ = window.eval("window.location.href = 'https://tv.zsam.de5.net/'");
-        }
+        "back" => { let _ = window.eval("window.history.back()"); }
+        "forward" => { let _ = window.eval("window.history.forward()"); }
+        "reload" => { let _ = window.eval("window.location.reload()"); }
+        "home" => { let _ = window.eval("window.location.href = 'https://tv.zsam.de5.net/'"); }
         _ => {}
     }
     Ok(())
