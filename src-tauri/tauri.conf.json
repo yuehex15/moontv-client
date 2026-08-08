@@ -2,6 +2,7 @@
   "productName": "MoonTV",
   "version": "0.1.0",
   "identifier": "com.moontv.client",
+  "mainBinaryName": "MoonTV",
   "build": {
     "frontendDist": "../dist"
   },
