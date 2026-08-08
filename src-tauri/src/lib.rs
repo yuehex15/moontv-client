@@ -3,14 +3,14 @@
 
 // 切换全屏
 #[tauri::command]
-fn toggle_fullscreen(window: tauri::Window) -> Result<(), String> {
+fn toggle_fullscreen(window: tauri::WebviewWindow) -> Result<(), String> {
     let is_full = window.is_fullscreen().map_err(|e| e.to_string())?;
     window.set_fullscreen(!is_full).map_err(|e| e.to_string())
 }
 
-// 导航 - 使用原生 URL 导航
+// 导航
 #[tauri::command]
-fn navigate(window: tauri::Window, url: String) -> Result<(), String> {
+fn navigate(window: tauri::WebviewWindow, url: String) -> Result<(), String> {
     window.navigate(url.parse().map_err(|e| e.to_string())?)
         .map_err(|e| e.to_string())
 }
