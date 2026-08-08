@@ -27,8 +27,22 @@ jobs:
           rustc --version
           cargo --version
 
+      - name: 缓存 Tauri CLI
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/bin/tauri*
+            ~/.cargo/.crates.toml
+            ~/.cargo/.crates2.json
+          key: tauri-cli-${{ runner.os }}-2
+
       - name: 安装 Tauri CLI
-        run: cargo install tauri-cli --version "^2"
+        run: |
+          if ! command -v cargo-tauri &> /dev/null; then
+            cargo install tauri-cli --version "^2"
+          else
+            echo "Tauri CLI 已缓存，跳过编译"
+          fi
 
       - name: 构建 MoonTV 客户端
         working-directory: moontv
